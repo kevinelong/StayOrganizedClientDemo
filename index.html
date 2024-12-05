@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo</title>
 </head>
+
 <body>
     <main>
         <h1>TODO</h1>
@@ -19,13 +20,22 @@
     <script>
         let baseURL = "http://localhost:8083/api/";
 
-        function renderToDo(t){
-            results.innerHTML += `
-                <div class="todo">${t.description}</div>
-            `; 
+        async function deleteToDo(id) {
+            await fetch(baseURL + "todos/" + id, { method: "DELETE", });
+            window.location.href = "index.html"; //refresh page
         }
 
-        async function saveToDo(){
+        function renderToDo(t) {
+            const e = document.createElement("div");
+            e.innerText = t.description;
+            const del = document.createElement("button");
+            del.innerText = "X";
+            del.addEventListener("click", () => deleteToDo(t.id));
+            e.appendChild(del);
+            results.appendChild(e);
+        }
+
+        async function saveToDo() {
             let text = newToDoInput.value;
             let newObject = {
                 "userid": 1,
@@ -35,10 +45,10 @@
                 "priority": "Medium",
                 "completed": false
             }
-            let response = await fetch(baseURL+"todos", {
+            let response = await fetch(baseURL + "todos", {
                 method: "POST", //CREATE
                 body: JSON.stringify(newObject),
-                headers:{
+                headers: {
                     "Content-type": "application/json"
                 }
             });
