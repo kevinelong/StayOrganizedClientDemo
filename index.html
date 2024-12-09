@@ -11,11 +11,20 @@
     <main>
         <h1>TODO</h1>
         <div id="newToDo">
+            <input type="date" id="dateDueInput">
+            <select id="userList">
+                <option value="1">Kevin</option>
+            </select>
+            <select id="catList">
+                <option>Personal</option>
+            </select>
             <input type="text" id="newToDoInput">
             <button id="newToDoSaveButton">Save</button>
         </div>
         <div id="filters"></div>
         <div id="results"></div>
+        <h1>Add USer</h1>
+        
     </main>
     <script>
         let baseURL = "http://localhost:8083/api/";
@@ -38,10 +47,10 @@
         async function saveToDo() {
             let text = newToDoInput.value;
             let newObject = {
-                "userid": 1,
-                "category": "Personal Task",
+                "userid": userList.value,
+                "category": catList.value,
                 "description": text,
-                "deadline": "2022-12-15",
+                "deadline": dateDueInput.value,
                 "priority": "Medium",
                 "completed": false
             }
@@ -55,6 +64,19 @@
             window.location.href = "index.html"; //refresh page
         }
 
+        async function saveUser() {
+            let newObject = {
+                name: nameInput.value,
+                username: unInput.value,
+                password: pwInput.value
+            }
+            let response = await fetch(baseURL + "users", {
+                method: "POST", //CREATE
+                body: JSON.stringify(newObject),
+                headers: {"Content-type": "application/json"}
+            });
+            window.location.href = "index.html"; //refresh page
+        }
 
         document.addEventListener("DOMContentLoaded", async () => {
 
